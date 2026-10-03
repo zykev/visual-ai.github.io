@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FACt: Feed-forward Animatable Clothed Human Reconstruction">
+  <title>FACt: Feed-forward Animatable Clothed Human Reconstruction</title>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <style>
+    :root { --ink:#1f2937; --muted:#555; --paper:#fff; --accent:#6b87a7; --line:#d9dee8; --panel:#f7f8fb; --shadow:0 7px 20px rgba(0,0,0,.06); }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:'Noto Sans',sans-serif; line-height:1.65; }
+    a { color:inherit; }
+    .container { width:min(1180px, calc(100% - 40px)); margin:0 auto; }
+    .hero { padding:78px 0 54px; text-align:center; background:#fff; }
+    .eyebrow { margin:0 0 12px; color:var(--muted); font-family:'Google Sans',sans-serif; font-size:.9rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { max-width:980px; margin:0 auto 22px; font-family:'Google Sans',sans-serif; font-size:clamp(2.35rem,5vw,4.1rem); font-weight:500; line-height:1.12; letter-spacing:-.035em; }
+    .authors { max-width:980px; margin:0 auto; font-family:'Google Sans',sans-serif; font-size:1.08rem; font-weight:400; }
+    .authors sup { color:var(--accent); font-size:.7em; }
+    .authors a { color:#3273dc; text-decoration:none; }
+    .authors a:hover { text-decoration:underline; }
+    .affiliations { margin:10px auto 0; color:var(--muted); font-size:.94rem; }
+    .links { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-top:28px; }
+    .button { display:inline-flex; align-items:center; gap:8px; padding:9px 17px; border:1px solid #363636; border-radius:999px; background:#363636; color:#fff; text-decoration:none; font-size:.9rem; font-weight:700; transition:transform .16s,background .16s; }
+    .button .icon { font-size:1.05rem; line-height:1; }
+    .button:hover { transform:translateY(-2px); background:var(--accent); border-color:var(--accent); }
+    section { padding:72px 0; }
+    section:nth-of-type(even) { background:#fff; }
+    .section-heading { margin-bottom:24px; }
+    .section-heading.centered { text-align:center; }
+    h2 { margin-bottom:8px; font-family:'Google Sans',sans-serif; font-size:clamp(2rem,3vw,2.8rem); font-weight:500; line-height:1.1; letter-spacing:-.025em; }
+    .teaser { display:block; width:100%; border-radius:14px; box-shadow:var(--shadow); background:#fff; }
+    .tldr { max-width:980px; margin:24px auto 0; padding:22px 26px; border-left:4px solid var(--accent); border-radius:0 10px 10px 0; background:var(--panel); font-size:1.08rem; }
+    .tldr strong { color:var(--ink); }
+    .prose { max-width:970px; margin:0 auto; font-size:1.04rem; text-align:justify; }
+    .pipeline { width:100%; margin-top:24px; border:1px solid var(--line); border-radius:12px; background:#fff; }
+    .caption { max-width:1050px; margin:15px auto 0; color:var(--muted); font-size:.94rem; text-align:justify; }
+    .demo-note { margin:-5px 0 22px; color:var(--muted); }
+    .carousel { position:relative; padding:0 58px; }
+    .carousel-track { min-height:1px; }
+    .slide { display:none; animation:fade .24s ease; }
+    .slide.active { display:block; }
+    @keyframes fade { from { opacity:.25; transform:translateY(4px); } to { opacity:1; transform:none; } }
+    .arrow { position:absolute; top:50%; z-index:2; width:40px; height:40px; border:1px solid var(--line); border-radius:50%; background:#fff; color:var(--ink); cursor:pointer; font-size:1.5rem; line-height:1; box-shadow:0 4px 12px rgba(24,36,42,.08); transform:translateY(-50%); }
+    .arrow:hover { border-color:var(--accent); color:var(--accent); }
+    .arrow.prev { left:0; } .arrow.next { right:0; }
+    .indicator { margin:15px 0 0; color:var(--muted); text-align:center; font-family:'Google Sans',sans-serif; font-size:.8rem; }
+    .media-grid { display:grid; gap:14px; }
+    .thuman-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .asset-card { overflow:hidden; border:1px solid var(--line); border-radius:10px; background:#fff; box-shadow:0 4px 13px rgba(24,36,42,.04); }
+    .asset-card img { display:block; width:100%; aspect-ratio:1; object-fit:contain; background:#fff; }
+    .asset-card p { margin:0; padding:8px 10px; color:var(--muted); font-family:'Google Sans',sans-serif; font-size:.72rem; text-align:center; }
+    .dress-grid { grid-template-columns:repeat(6,minmax(0,1fr)); }
+    .dress-grid .asset-card p { min-height:42px; display:flex; align-items:center; justify-content:center; }
+    .novel-layout { display:grid; grid-template-columns:minmax(155px, .82fr) minmax(0, 5fr); gap:14px; align-items:stretch; }
+    .pose-reference { display:flex; flex-direction:column; }
+    .pose-reference .asset-card { height:100%; }
+    .pose-reference img { height:auto; min-height:0; aspect-ratio:1; object-fit:contain; }
+    .novel-grid { grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+    .novel-grid .asset-card p { min-height:35px; padding:7px 5px; font-size:.67rem; }
+    .novel-title { margin:0 0 14px; text-align:center; color:var(--muted); font-family:'Google Sans',sans-serif; font-size:.9rem; font-weight:500; }
+    .performance-subheading { margin:42px 0 7px; font-family:'Google Sans',sans-serif; font-size:1.55rem; font-weight:700; line-height:1.25; }
+    .performance-subheading:first-of-type { margin-top:0; }
+    .citation { max-width:900px; margin:0 auto; padding:20px 24px; overflow-x:auto; border-radius:8px; background:var(--panel); color:#25313b; font-family:Consolas,monospace; font-size:.88rem; line-height:1.55; text-align:left; }
+    footer { padding:30px 0 38px; color:var(--muted); font-size:.85rem; text-align:center; }
+    @media (max-width:900px) { .dress-grid { grid-template-columns:repeat(3,1fr); } .novel-layout { grid-template-columns:1fr; } .pose-reference img { height:auto; aspect-ratio:1; } }
+    @media (max-width:640px) { .container { width:min(100% - 28px,1180px); } .hero { padding:54px 0 42px; } section { padding:52px 0; } .carousel { padding:0 32px; } .arrow { width:30px; height:30px; font-size:1.2rem; } .thuman-grid { grid-template-columns:repeat(2,1fr); } .dress-grid { grid-template-columns:repeat(2,1fr); } .novel-grid { grid-template-columns:repeat(2,1fr); } }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <h1>FACt: Feed-forward Animatable Clothed Human Reconstruction</h1>
+      <p class="authors"><a href="https://zykev.github.io/">Zeyu Chen</a><sup>1</sup>, <a href="https://scholar.google.com/citations?user=ef255KYAAAAJ&amp;hl=zh-CN">Kaiyan Zhang</a><sup>1</sup>, <a href="https://yukangcao.github.io/">Yukang Cao</a><sup>2</sup>, <a href="https://yang-l1.github.io/">YANG LI</a><sup>3</sup>, <a href="https://scholar.google.com/citations?user=8twuSywAAAAJ&amp;hl=en">Pan Ji</a><sup>4</sup>, <a href="https://scholar.google.com/citations?user=_xMURkAAAAAJ&amp;hl=en">Pei Liu</a><sup>1</sup>, <a href="https://www.kaihan.org/">Kai Han</a><sup>1</sup></p>
+      <p class="affiliations"><sup>1</sup>University of Hong Kong &nbsp; <sup>2</sup>Nanyang Technological University &nbsp; <sup>3</sup>Tencent &nbsp; <sup>4</sup>Vertex Lab</p>
+      <nav class="links" aria-label="Project links">
+        <a class="button" href="#"><span class="icon"><i class="ai ai-arxiv" aria-hidden="true"></i></span><span>Paper</span></a>
+        <a class="button" href="#"><span class="icon"><i class="fab fa-github" aria-hidden="true"></i></span><span>Code</span></a>
+        <a class="button" href="#"><span class="icon" aria-hidden="true">🤗</span><span>Model</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="container">
+        <video class="teaser" controls autoplay muted loop playsinline aria-label="FACt teaser video"><source src="static/videos/teaser.mp4" type="video/mp4">Your browser does not support the video tag.</video>
+        <p class="tldr">We propose FACt, a feed-forward framework combining 3D Gaussian Splatting with deformable attention and extended LBS to achieve high-fidelity, animatable human reconstruction and clothing deformation in a single forward pass. Our method integrates deformable feature fusion from sparse-view images and a cloth joint-driven kinematic chain.</p>
+      </div>
+    </section>
+
+    <section id="abstract">
+      <div class="container">
+        <div class="section-heading centered"><h2>Overview</h2></div>
+        <p class="prose">We present FACt, a novel feed-forward framework for animatable clothed human reconstruction from sparse-view images. Unlike optimization-based methods requiring per-subject refinement or feed-forward approaches limited to static capture, FACt leverages 3D Gaussian Splatting to enable high-fidelity avatar reconstruction and adaptive clothing deformation in a single forward pass. Our model's architecture efficiently fuses 3D representation with locally aligned image features via a deformable transformer, effectively preserving geometric and appearance fidelity in the canonical space. To accurately model dynamic clothing, we introduce an adaptive cloth joint learning strategy. This strategy extends the standard Linear Blend Skinning kinematic chain beyond the SMPL-X template, enabling realistic motion control across diverse clothing styles and poses. Experiments on real-world datasets demonstrate that FACt produces realistic and animatable human avatars across novel views and poses, outperforming state-of-the-art methods.</p>
+      </div>
+    </section>
+
+    <section id="method">
+      <div class="container">
+        <div class="section-heading centered"><h2>Method</h2></div>
+        <img class="pipeline" src="static/images/webpage_pipeline.png" alt="FACt reconstruction and animation pipeline">
+        <p class="caption">Sparse-view inputs initialize body and cloth Gaussians from SMPL-X and cloth templates. Full and face image features are extracted by Sapiens and fused with Gaussian features to predict canonical Gaussian primitives. Pose-conditioned cloth-joint states are then predicted and combined with body joints in an extended LBS to model garment dynamics. <strong>(a) Deformable transformer:</strong> an offset network samples locally aligned image features, while SMPL depth-based visibility preserves cross-view consistency for feature fusion. <strong>(b) Adaptive cloth joint learning:</strong> anchors initialized from the canonical SMPL-X mesh define support regions for cloth Gaussians; cross-attention aggregates features in each region, and MLP heads predict joint offsets and rotations relative to parent body joints. Extended LBS combines body- and cloth-joint influences, allowing Gaussians farther from the body to depend more on cloth joints.</p>
+      </div>
+    </section>
+
+    <section id="results">
+      <div class="container">
+        <div class="section-heading centered"><h2>Performance</h2></div>
+        <h3 class="performance-subheading">THuman Reconstruction</h3>
+        <p class="demo-note">Four subjects are shown per page. Use the arrows to browse the remaining samples.</p>
+        <div class="carousel" data-carousel="thuman"></div>
+        <h3 class="performance-subheading">4D-DRESS Animation</h3>
+        <p class="demo-note">Each page presents one outfit: ground truth, canonical view, and four rendered views.</p>
+        <div class="carousel" data-carousel="dress"></div>
+        <h3 class="performance-subheading">Novel Pose Synthesis</h3>
+        <p class="demo-note">The driving SMPL-X motion is at left. The five-column, two-row grid keeps the target identities in a fixed order for every outfit.</p>
+        <div class="carousel" data-carousel="novel"></div>
+      </div>
+    </section>
+
+    <section id="citation">
+      <div class="container">
+        <div class="section-heading centered"><h2>Citation</h2></div>
+        <pre class="citation"><code>@article{chen2026fact,
+  title   = {FACt: Feed-forward Animatable Clothed Human Reconstruction},
+  author  = {Chen, Zeyu and Zhang, Kaiyan and Cao, Yukang and Li, Yang and Ji, Pan and Liu, Pei and Han, Kai},
+  journal = {arXiv preprint},
+  year    = {2026}
+}</code></pre>
+      </div>
+    </section>
+  </main>
+  <footer><div class="container">@2026 FACt &mdash; Feed-forward Animatable Clothed Human Reconstruction | <a href="https://visailab.github.io/">Visual AI Lab</a></div></footer>
+
+  <script>
+    const root = 'static/videos/';
+    const image = (src, label) => `<article class="asset-card"><img src="${src}" alt="${label}"><p>${label}</p></article>`;
+    const thuman = ['0009','0029','0138','0291','0412','1051','1775','2049'];
+    const dress = ['00123','00152','00154','00187','00188','00190'];
+    const novel = [
+      { folder: '00129_inner', source: '00129_novel_pose.gif' },
+      { folder: '00140_inner', source: '00140_novel_pose.gif' },
+      { folder: '00147_inner', source: '00147_novel_pose.gif' },
+      { folder: '00168_outer', source: '00168_novel_pose.gif' },
+      { folder: '00179_inner', source: '00179_novel_pose.gif' },
+      { folder: '00185_inner', source: '00185_novel_pose.gif' }
+    ];
+    const targetOrder = ['0024','1202','1311','1429','1489','1516','1730','2082','2127'];
+
+    const slides = {
+      thuman: [thuman.slice(0,4), thuman.slice(4)].map(group => `<div class="media-grid thuman-grid">${group.map(id => image(`${root}thuman/${id}.gif`, `THuman ${id}`)).join('')}</div>`),
+      dress: dress.map(id => `<div><p class="novel-title">4D-Dress sample ${id}</p><div class="media-grid dress-grid">${[
+        image(`${root}4ddress/${id}/view_00.png`, 'Ground truth'),
+        image(`${root}4ddress/${id}/multiview.png`, 'Canonical view'),
+        image(`${root}4ddress/${id}/view_00.gif`, 'Render · view 00'),
+        image(`${root}4ddress/${id}/view_06.gif`, 'Render · view 06'),
+        image(`${root}4ddress/${id}/view_12.gif`, 'Render · view 12'),
+        image(`${root}4ddress/${id}/view_18.gif`, 'Render · view 18')
+      ].join('')}</div></div>`),
+      novel: novel.map(sample => {
+        const id = sample.folder.slice(0,5);
+        const outputs = [image(`${root}novel_pose/${sample.folder}/${sample.source}`, `Source avatar ${id}`), ...targetOrder.map(target => image(`${root}novel_pose/${sample.folder}/${target}_novel_pose.gif`, `Target ${target}`))].join('');
+        return `<div><p class="novel-title">Outfit sample ${id} · ${sample.folder.endsWith('outer') ? 'outerwear' : 'innerwear'}</p><div class="novel-layout"><div class="pose-reference">${image(`${root}novel_pose/${sample.folder}/smplx_direct.gif`, 'SMPL-X driving pose')}</div><div class="media-grid novel-grid">${outputs}</div></div></div>`;
+      })
+    };
+
+    function mountCarousel(el, pages) {
+      let current = 0;
+      el.innerHTML = `<button class="arrow prev" aria-label="Previous sample">&#8249;</button><div class="carousel-track">${pages.map((page,i) => `<div class="slide ${i === 0 ? 'active' : ''}">${page}</div>`).join('')}</div><button class="arrow next" aria-label="Next sample">&#8250;</button><p class="indicator"></p>`;
+      const rendered = [...el.querySelectorAll('.slide')], indicator = el.querySelector('.indicator');
+      const update = () => { rendered.forEach((slide,i) => slide.classList.toggle('active', i === current)); indicator.textContent = `${String(current + 1).padStart(2,'0')} / ${String(pages.length).padStart(2,'0')}`; };
+      el.querySelector('.prev').addEventListener('click', () => { current = (current - 1 + pages.length) % pages.length; update(); });
+      el.querySelector('.next').addEventListener('click', () => { current = (current + 1) % pages.length; update(); });
+      update();
+    }
+    document.querySelectorAll('[data-carousel]').forEach(el => mountCarousel(el, slides[el.dataset.carousel]));
+  </script>
+</body>
+</html>
